@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>НЕБАФФЕТТ · Дашборд</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; background: #fff; }
+  iframe { display: block; width: 100%; height: 100%; border: 0; }
+  #loader {
+    position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+    background: #fff; font-family: 'Trebuchet MS', sans-serif; color: #8a8a8a; font-size: 15px;
+    transition: opacity .4s; pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<div id="loader">Загружаем данные…</div>
+<!-- ВСТАВЬТЕ СЮДА вашу ссылку /exec из Apps Script -->
+<iframe src="https://script.google.com/macros/s/AKfycbzSwlTKqcqsMn25nGiFurF6hJuXqIX-Wga8VwPwgfasCa-fxg7HAqjjZ8IW2sZ6jfkW/exec"
+        onload="document.getElementById('loader').style.opacity=0"
+        allow="clipboard-write"></iframe>
+</body>
+</html>
