@@ -17,9 +17,23 @@
 </head>
 <body>
 <div id="loader">Загружаем данные…</div>
-<!-- ВСТАВЬТЕ СЮДА вашу ссылку /exec из Apps Script -->
-<iframe src="https://script.google.com/macros/s/AKfycbzSwlTKqcqsMn25nGiFurF6hJuXqIX-Wga8VwPwgfasCa-fxg7HAqjjZ8IW2sZ6jfkW/exec"
-        onload="document.getElementById('loader').style.opacity=0"
-        allow="clipboard-write"></iframe>
+<iframe id="app" src="https://script.google.com/macros/s/AKfycbzSwlTKqcqsMn25nGiFurF6hJuXqIX-Wga8VwPwgfasCa-fxg7HAqjjZ8IW2sZ6jfkW/exec" allow="clipboard-write"></iframe>
+<script>
+  var SRC = document.getElementById('app').src;
+  var tries = 0;
+  document.getElementById('app').addEventListener('load', function () {
+    document.getElementById('loader').style.opacity = 0;
+  });
+  // Одна автоматическая перезагрузка: страховка от сбоя первого запроса
+  // к Apps Script в сессии без cookie (инкогнито, первый визит).
+  setTimeout(function () {
+    if (sessionStorage.getItem('retried')) return;
+    sessionStorage.setItem('retried', '1');
+    if (tries === 0) {
+      tries = 1;
+      document.getElementById('app').src = SRC + (SRC.indexOf('?') < 0 ? '?' : '&') + 'r=' + Date.now();
+    }
+  }, 2500);
+</script>
 </body>
 </html>
