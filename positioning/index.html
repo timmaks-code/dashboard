@@ -88,6 +88,12 @@
 <script>
 (function () {
   var EXEC = 'https://script.google.com/macros/s/AKfycby4ighn0aO6RqTM8oCNOHeqBnb2QRf3tVZWFbnrKBy0WiB122gNRp9zBXxf7Dgi2gKj/exec';
+
+  // Раздел переехал на свой сервер. Пустая строка возвращает его
+  // на Apps Script — это и есть откат: одна правка и коммит,
+  // без разбирательств с тем, что сломалось.
+  var SERVER = 'https://s.nebuff.ru/positioning/';
+
   var RETRY_KEY = 'retried_positioning';         // свой ключ на каждый раздел
   var LS_KEY = 'nb_key';             // пароль, общий для всего nebuff.ru
 
@@ -108,7 +114,8 @@
   });
 
   function buildSrc(key) {
-    return key ? (EXEC + '?k=' + encodeURIComponent(key)) : EXEC;
+    var база = SERVER || EXEC;
+    return key ? (база + '?k=' + encodeURIComponent(key)) : база;
   }
 
   function start(key) {
@@ -118,13 +125,20 @@
     loader.style.opacity = 1;
     var SRC = buildSrc(key);
     app.src = SRC;
+
     // Одна автоматическая перезагрузка: страховка от сбоя первого запроса
     // к Apps Script в сессии без cookie (инкогнито, первый визит).
-    setTimeout(function () {
-      if (sessionStorage.getItem(RETRY_KEY)) return;
-      sessionStorage.setItem(RETRY_KEY, '1');
-      app.src = SRC + (SRC.indexOf('?') < 0 ? '?' : '&') + 'r=' + Date.now();
-    }, 2500);
+    //
+    // Своему серверу она не нужна и вредна: он отвечает за десятки
+    // миллисекунд, и читатель увидел бы, как открытая страница
+    // ни с того ни с сего моргает через две с половиной секунды.
+    if (!SERVER) {
+      setTimeout(function () {
+        if (sessionStorage.getItem(RETRY_KEY)) return;
+        sessionStorage.setItem(RETRY_KEY, '1');
+        app.src = SRC + (SRC.indexOf('?') < 0 ? '?' : '&') + 'r=' + Date.now();
+      }, 2500);
+    }
   }
 
   function askGate() {
