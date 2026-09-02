@@ -126,17 +126,11 @@
     app.src = SRC;
     // Одна автоматическая перезагрузка: страховка от сбоя первого запроса
     // к Apps Script в сессии без cookie (инкогнито, первый визит).
-    // Страховка от сбоя первого запроса к Apps Script в сессии
-    // без cookie. Разделам с нашего сервера не нужна: он отвечает
-    // мгновенно, и перезагрузка выглядела бы как моргание
-    // уже открытой страницы.
-    if (SRC.indexOf('s.nebuff.ru') < 0) {
-      setTimeout(function () {
-        if (sessionStorage.getItem(RETRY_KEY)) return;
-        sessionStorage.setItem(RETRY_KEY, '1');
-        app.src = SRC + (SRC.indexOf('?') < 0 ? '?' : '&') + 'r=' + Date.now();
-      }, 2500);
-    }
+    setTimeout(function () {
+      if (sessionStorage.getItem(RETRY_KEY)) return;
+      sessionStorage.setItem(RETRY_KEY, '1');
+      app.src = SRC + (SRC.indexOf('?') < 0 ? '?' : '&') + 'r=' + Date.now();
+    }, 2500);
   }
 
   function askGate() {
